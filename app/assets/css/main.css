@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'FarAwayGalaxy';
+    src: url('/app/assets/fonts/far_away_galaxy.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
