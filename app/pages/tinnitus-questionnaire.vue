@@ -35,7 +35,7 @@
     <main class="max-w-4xl mx-auto px-4 pb-16">
       <!-- Tarjetas de accion -->
       <div class="grid md:grid-cols-2 gap-6 mb-12">
-        <NuxtLink to="/questionnarie" class="group">
+        <NuxtLink to="/questionnaire" class="group">
           <div
             class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
           >
