@@ -93,5 +93,10 @@ const links = [
   { name: "Generos", href: "/genres" },
   { name: "Tiempo de lectura", href: "#" },
   { name: "Favoritos", href: "#" },
+  { name: "Terapia de Sonido", href: "/tinnitus" },
+  {
+    name: "Encuenta del sintoma del tinnitus",
+    href: "/tinnitus-questionnaire",
+  },
 ];
 </script>
