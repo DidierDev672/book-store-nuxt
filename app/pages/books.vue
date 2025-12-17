@@ -1,5 +1,7 @@
 <template>
   <div class="bg-gray-50 min-h-screen py-12">
+    <div v-if="loading">Cargando Libros...0</div>
+    <div v-else-if="error">Error: {{ error }}</div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-4xl font-extrabold text-gray-900 mb-10 text-center">
         📖 Catálogo de Libros
@@ -30,7 +32,7 @@
       <TransitionGroup
         name="book-list"
         tag="div"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
       >
         <div
           v-for="book in filteredAndSortedBooks"
@@ -38,30 +40,24 @@
           class="book-card"
         >
           <div
-            class="bg-white p-6 rounded-xl shadow-lg border-l-4 transform hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer"
+            class="flex flex-col h-full"
             :class="book.available ? 'border-green-500' : 'border-red-500'"
           >
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">
+          <div class="relative aspect-[2/3] rounded-sm shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 overflow-hidden"
+          style="background:hsl(350, 45%, 30%)"
+          >
+          </div>
+          <div class="absolute left-0 top-0 bottom-0 w-3 bg-black/20"></div>
+            <h2 class="font-display text-lg md:text-xl font-semibold loading-tight drop-shadow-md">
               {{ book.title }}
             </h2>
-
-            <p class="text-sm text-gray-600 mb-4">
+            <p class="font-body text-sm opacity-90 drop-shadow-sm">
+              {{ book.author }}
+            </p>
+            <p class="font-body text-sm opacity-90 drop-shadow-sm">
               <span class="font-medium text-blue-600">Año de Publicación:</span>
               {{ book.published_year }}
             </p>
-
-            <div class="flex items-center space-x-2">
-              <span
-                :class="
-                  book.available
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
-                "
-                class="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
-              >
-                {{ book.available ? "Disponible" : "No Disponible" }}
-              </span>
-            </div>
           </div>
         </div>
 
@@ -80,35 +76,39 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import axios from "axios";
 
-const books = ref([
-  {
-    id: 1,
-    title: "Cien años de soledad",
-    published_year: 1967,
-    available: true,
-  },
-  {
-    id: 2,
-    title: "El amor en los tiempos del cólera",
-    published_year: 1985,
-    available: false,
-  },
-  { id: 3, title: "Rayuela", published_year: 1963, available: true },
-  {
-    id: 4,
-    title: "Don Quijote de la Mancha",
-    published_year: 1605,
-    available: true,
-  },
-  {
-    id: 5,
-    title: "La casa de los espíritus",
-    published_year: 1982,
-    available: false,
-  },
-  { id: 6, title: "Ficciones", published_year: 1944, available: true },
-]);
+const books = ref([]);
+const loading = ref(false);
+const error = ref(null);
+
+const fetchBooks = async  () => {
+  loading.value = true;
+  error.value = null;
+
+  try{
+    const response = await axios.get("https://openlibrary.org/people/mekBot/books/want-to-read.json");
+
+
+    books.value = response.data.reading_log_entries.map((item, index) => ({
+      id: index,
+      title: item.work?.title || 'Sin título',
+      published_year: item.work?.first_publish_year || null,
+      author: item.work?.author_names?.[0] || 'Autor desconocido',
+      available: true,
+      coverColor: 'hsl(35,60%,35%)'
+    }));
+  }
+  catch(error){
+    console.error('Error al cargar libros: ', error);
+    error.value = error.message || 'Error al cargar los libros';
+  }
+  finally{
+    loading.value = false;
+  }
+}
+
+fetchBooks();
 
 const sortAscending = ref(true);
 const filterAvailable = ref(false);
