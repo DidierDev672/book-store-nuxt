@@ -98,5 +98,9 @@ const links = [
     name: "Encuenta del sintoma del tinnitus",
     href: "/tinnitus-questionnaire",
   },
+  {
+    name: "Calendario",
+    href: "/calendar",
+  },
 ];
 </script>
