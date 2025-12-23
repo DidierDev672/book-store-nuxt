@@ -77,7 +77,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
-
 const books = ref([]);
 const loading = ref(false);
 const error = ref(null);
@@ -119,27 +118,6 @@ const filteredBooks = computed(() => {
   }
   return books.value.filter((book) => book.available);
 });
-
-const filteredAndSortedBooks = computed(() => {
-  return [...filteredBooks.value].sort((a, b) => {
-    const yearA = a.published_year;
-    const yearB = b.published_year;
-
-    if (sortAscending.value) {
-      return yearA - yearB;
-    } else {
-      return yearB - yearA;
-    }
-  });
-});
-
-const toggleSort = () => {
-  sortAscending.value = !sortAscending.value;
-};
-
-const toggleAvailability = () => {
-  filterAvailable.value = !filterAvailable.value;
-};
 </script>
 
 <style>
